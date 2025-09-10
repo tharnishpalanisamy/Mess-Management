@@ -2,23 +2,23 @@
 const SYSTEM_DATA = {
     students: [
         {
-            rollNumber: "21CS101",
-            password: "student123",
-            name: "Arjun Kumar",
-            hostelBlock: "A Block",
-            roomNumber: "201",
-            department: "Computer Science",
+            rollNumber: "23BDA035",
+            password: "123",
+            name: "Naveena",
+            hostelBlock: "Yamuna",
+            roomNumber: "301",
+            department: "Computer Science with Data Analytics",
             year: "3rd Year",
             permanentQRCode: "HST-21CS101-A201-2025",
             weeklyBookings: {}
         },
         {
-            rollNumber: "21CS102", 
-            password: "student456",
-            name: "Priya Sharma",
-            hostelBlock: "B Block",
-            roomNumber: "105",
-            department: "Computer Science",
+            rollNumber: "23BDA027", 
+            password: "123",
+            name: "kalaimathi",
+            hostelBlock: "Yamuna",
+            roomNumber: "301",
+            department: "Computer Science with Data Analytics",
             year: "3rd Year",
             permanentQRCode: "HST-21CS102-B105-2025",
             weeklyBookings: {}
