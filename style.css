@@ -1077,3 +1077,15 @@ input:checked + .toggle-slider:before {
         margin-bottom: 1rem;
     }
 }
+.day-date {
+    font-size: 0.8rem;
+    color: #64748b;
+    font-weight: normal;
+    margin-top: 2px;
+}
+.day-date {
+    font-size: 0.8rem;
+    color: #64748b;
+    font-weight: bold;  /* Make dates bold */
+    margin-top: 2px;
+}

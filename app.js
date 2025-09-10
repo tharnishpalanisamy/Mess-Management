@@ -164,14 +164,17 @@ let currentStudent = null;
 let currentWeekBookings = {};
 let activeTab = 'booking';
 
-// DOM Elements
-const loginScreen = document.getElementById('loginScreen');
-const mainDashboard = document.getElementById('mainDashboard');
-const loginForm = document.getElementById('loginForm');
-const loginError = document.getElementById('loginError');
+// DOM Elements - Initialize inside DOMContentLoaded
+let loginScreen, mainDashboard, loginForm, loginError;
 
 // Initialize Application
 document.addEventListener('DOMContentLoaded', function() {
+    // Initialize DOM elements after DOM is loaded
+    loginScreen = document.getElementById('loginScreen');
+    mainDashboard = document.getElementById('mainDashboard');
+    loginForm = document.getElementById('loginForm');
+    loginError = document.getElementById('loginError');
+    
     // Check for saved session
     const savedStudent = sessionStorage.getItem('currentStudent');
     if (savedStudent) {
@@ -296,8 +299,10 @@ function initializeDashboard() {
 
 // Update User Info
 function updateUserInfo() {
-    document.getElementById('userName').textContent = currentStudent.name;
-    document.getElementById('userRoll').textContent = currentStudent.rollNumber;
+    const userName = document.getElementById('userName');
+    const userRoll = document.getElementById('userRoll');
+    if (userName) userName.textContent = currentStudent.name;
+    if (userRoll) userRoll.textContent = currentStudent.rollNumber;
 }
 
 // Switch Tab
@@ -306,13 +311,15 @@ function switchTab(tabName) {
     document.querySelectorAll('.nav-tab').forEach(tab => {
         tab.classList.remove('active');
     });
-    document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+    const activeNavTab = document.querySelector(`[data-tab="${tabName}"]`);
+    if (activeNavTab) activeNavTab.classList.add('active');
     
     // Update content
     document.querySelectorAll('.tab-content').forEach(content => {
         content.classList.remove('active');
     });
-    document.getElementById(tabName + 'Tab').classList.add('active');
+    const activeContent = document.getElementById(tabName + 'Tab');
+    if (activeContent) activeContent.classList.add('active');
     
     activeTab = tabName;
 }
@@ -326,12 +333,14 @@ function updateBookingStatus() {
     const statusElement = document.getElementById('bookingStatusHeader');
     const statusText = document.getElementById('bookingStatusText');
     
-    if (isThursday) {
-        statusElement.className = 'booking-status open';
-        statusText.textContent = 'Booking Open';
-    } else {
-        statusElement.className = 'booking-status closed';
-        statusText.textContent = 'Booking Closed';
+    if (statusElement && statusText) {
+        if (isThursday) {
+            statusElement.className = 'booking-status open';
+            statusText.textContent = 'Booking Open';
+        } else {
+            statusElement.className = 'booking-status closed';
+            statusText.textContent = 'Booking Closed';
+        }
     }
 }
 
@@ -369,7 +378,8 @@ function updateNextThursday() {
         day: 'numeric'
     });
     
-    document.getElementById('nextThursday').textContent = dateStr;
+    const nextThursdayElement = document.getElementById('nextThursday');
+    if (nextThursdayElement) nextThursdayElement.textContent = dateStr;
 }
 
 // Generate Weekly Booking Form
@@ -384,10 +394,13 @@ function generateWeeklyBookingForm() {
     
     const startStr = nextSunday.toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
     const endStr = weekEnd.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
-    document.getElementById('weekDates').textContent = `${startStr} - ${endStr}`;
+    const weekDatesElement = document.getElementById('weekDates');
+    if (weekDatesElement) weekDatesElement.textContent = `${startStr} - ${endStr}`;
     
     // Generate weekly grid
     const weeklyGrid = document.getElementById('weeklyGrid');
+    if (!weeklyGrid) return;
+    
     const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
     const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     
@@ -397,10 +410,19 @@ function generateWeeklyBookingForm() {
         const dayData = SYSTEM_DATA.weeklyMenu[day];
         const isSpecialDay = ['tuesday', 'thursday', 'sunday'].includes(day);
         
+        // Calculate the date for each day
+        const currentDayDate = new Date(nextSunday);
+        currentDayDate.setDate(nextSunday.getDate() + index);
+        const dateStr = currentDayDate.toLocaleDateString('en-US', { 
+            month: 'short', 
+            day: 'numeric' 
+        });
+        
         gridHTML += `
             <div class="day-card ${isSpecialDay ? 'special-day' : ''}">
                 <div class="day-header">
                     ${dayNames[index]}
+                    <div class="day-date">${dateStr}</div>
                 </div>
                 <div class="meal-list">
                     ${generateMealItems(day, dayData)}
@@ -555,28 +577,31 @@ function updateBookingSummary() {
     });
     
     // Update total count
-    document.getElementById('totalMealsCount').textContent = totalMeals;
+    const totalMealsElement = document.getElementById('totalMealsCount');
+    if (totalMealsElement) totalMealsElement.textContent = totalMeals;
     
     // Update breakdown
     const breakdownElement = document.getElementById('mealBreakdown');
-    let breakdownHTML = '';
-    
-    Object.keys(breakdown).forEach(meal => {
-        if (breakdown[meal] > 0) {
-            breakdownHTML += `
-                <div class="breakdown-item">
-                    <span>${meal.charAt(0).toUpperCase() + meal.slice(1)}:</span>
-                    <span>${breakdown[meal]} days</span>
-                </div>
-            `;
-        }
-    });
-    
-    breakdownElement.innerHTML = breakdownHTML;
+    if (breakdownElement) {
+        let breakdownHTML = '';
+        
+        Object.keys(breakdown).forEach(meal => {
+            if (breakdown[meal] > 0) {
+                breakdownHTML += `
+                    <div class="breakdown-item">
+                        <span>${meal.charAt(0).toUpperCase() + meal.slice(1)}:</span>
+                        <span>${breakdown[meal]} days</span>
+                    </div>
+                `;
+            }
+        });
+        
+        breakdownElement.innerHTML = breakdownHTML;
+    }
     
     // Enable/disable confirm button
     const confirmBtn = document.getElementById('confirmBookingBtn');
-    confirmBtn.disabled = totalMeals === 0;
+    if (confirmBtn) confirmBtn.disabled = totalMeals === 0;
 }
 
 // Confirm Weekly Booking
@@ -615,11 +640,17 @@ function loadProfileSection() {
     if (!currentStudent) return;
     
     // Update profile info
-    document.getElementById('profileName').textContent = currentStudent.name;
-    document.getElementById('profileRoll').textContent = currentStudent.rollNumber;
-    document.getElementById('profileBlock').textContent = `${currentStudent.hostelBlock}, Room ${currentStudent.roomNumber}`;
-    document.getElementById('profileDepartment').textContent = `${currentStudent.department} - ${currentStudent.year}`;
-    document.getElementById('qrCodeId').textContent = currentStudent.permanentQRCode;
+    const profileName = document.getElementById('profileName');
+    const profileRoll = document.getElementById('profileRoll');
+    const profileBlock = document.getElementById('profileBlock');
+    const profileDepartment = document.getElementById('profileDepartment');
+    const qrCodeId = document.getElementById('qrCodeId');
+    
+    if (profileName) profileName.textContent = currentStudent.name;
+    if (profileRoll) profileRoll.textContent = currentStudent.rollNumber;
+    if (profileBlock) profileBlock.textContent = `${currentStudent.hostelBlock}, Room ${currentStudent.roomNumber}`;
+    if (profileDepartment) profileDepartment.textContent = `${currentStudent.department} - ${currentStudent.year}`;
+    if (qrCodeId) qrCodeId.textContent = currentStudent.permanentQRCode;
     
     // Generate QR Code
     generateQRCode();
@@ -649,6 +680,8 @@ function generateQRCode() {
 // Load Menu Section
 function loadMenuSection() {
     const menuGrid = document.getElementById('menuGrid');
+    if (!menuGrid) return;
+    
     const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
     const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     
@@ -698,6 +731,7 @@ function generateMenuMeals(dayData) {
 // Load History Section
 function loadHistorySection() {
     const currentWeekStatus = document.getElementById('currentWeekStatus');
+    if (!currentWeekStatus) return;
     
     if (currentStudent && currentStudent.weeklyBookings && Object.keys(currentStudent.weeklyBookings).length > 0) {
         let statusHTML = '';
@@ -783,5 +817,4 @@ function showToast(message, type = 'info') {
         if (toast.parentNode) {
             toast.parentNode.removeChild(toast);
         }
-    }, 5000);
-}
+    }, 5000);}
