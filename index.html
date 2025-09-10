@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hostel Mess Token System - PSG CAS</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+  </head>
+  <body>
+    <!-- Login Screen -->
+    <div id="loginScreen" class="login-screen active">
+      <div class="login-container">
+        <div class="login-card">
+          <div class="login-header">
+            <div class="college-logo">
+              <i class="fas fa-university"></i>
+            </div>
+            <h1>PSG College of Arts & Science</h1>
+            <h2>Hostel Mess Token System</h2>
+            <p class="login-subtitle">Weekly Token Booking Platform</p>
+          </div>
+
+          <form id="loginForm" class="login-form">
+            <div class="form-group">
+              <label for="rollNumber">Roll Number</label>
+              <div class="input-container">
+                <i class="fas fa-id-card"></i>
+                <input
+                  type="text"
+                  id="rollNumber"
+                  name="rollNumber"
+                  placeholder="Enter roll number"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="password">Password</label>
+              <div class="input-container">
+                <i class="fas fa-lock"></i>
+                <input
+                  type="password"
+                  id="password"
+                  name="password"
+                  placeholder="Enter password"
+                  required
+                />
+              </div>
+            </div>
+
+            <button type="submit" class="login-btn">
+              <i class="fas fa-sign-in-alt"></i>
+              Access Token System
+            </button>
+
+            <div id="loginError" class="error-message hidden"></div>
+          </form>
+
+          <div class="demo-credentials">
+            <h4>Demo Login</h4>
+            <div class="demo-row">
+              <span><strong>Roll:</strong> 21CS101</span>
+              <span><strong>Password:</strong> student123</span>
+            </div>
+            <div class="demo-row">
+              <span><strong>Roll:</strong> 21CS102</span>
+              <span><strong>Password:</strong> student456</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Dashboard -->
+    <div id="mainDashboard" class="dashboard hidden">
+      <!-- Fixed Header -->
+      <header class="dashboard-header">
+        <div class="header-content">
+          <div class="header-left">
+            <div class="logo-section">
+              <i class="fas fa-utensils"></i>
+              <span class="system-title">Mess Token System</span>
+            </div>
+          </div>
+
+          <div class="header-center">
+            <div class="booking-status" id="bookingStatusHeader">
+              <i class="fas fa-calendar-check"></i>
+              <span id="bookingStatusText">Booking Available</span>
+            </div>
+          </div>
+
+          <div class="header-right">
+            <div class="user-info">
+              <div class="user-details">
+                <span class="user-name" id="userName">Student Name</span>
+                <span class="user-roll" id="userRoll">Roll Number</span>
+              </div>
+              <div class="user-avatar">
+                <i class="fas fa-user-circle"></i>
+              </div>
+            </div>
+            <button id="logoutBtn" class="logout-btn">
+              <i class="fas fa-sign-out-alt"></i>
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <!-- Navigation Tabs -->
+      <nav class="dashboard-nav">
+        <div class="nav-container">
+          <button class="nav-tab active" data-tab="booking">
+            <i class="fas fa-calendar-week"></i>
+            <span>Weekly Booking</span>
+          </button>
+          <button class="nav-tab" data-tab="profile">
+            <i class="fas fa-qrcode"></i>
+            <span>QR Code</span>
+          </button>
+          <button class="nav-tab" data-tab="menu">
+            <i class="fas fa-utensils"></i>
+            <span>Menu</span>
+          </button>
+          <button class="nav-tab" data-tab="history">
+            <i class="fas fa-history"></i>
+            <span>History</span>
+          </button>
+        </div>
+      </nav>
+
+      <!-- Content Area -->
+      <main class="dashboard-content">
+        <!-- Booking Tab -->
+        <div id="bookingTab" class="tab-content active">
+          <!-- Booking Closed Message -->
+          <div id="bookingClosed" class="booking-closed-container hidden">
+            <div class="booking-closed-card">
+              <div class="closed-icon">
+                <i class="fas fa-calendar-times"></i>
+              </div>
+              <h3>Weekly Booking Closed</h3>
+              <p>
+                Token booking is available only on
+                <strong>Thursdays</strong> for the upcoming Sunday to Saturday
+                week.
+              </p>
+              <div class="next-booking-info">
+                <div class="next-booking-date">
+                  <strong>Next Booking Window:</strong>
+                  <span id="nextThursday">Thursday, September 18, 2025</span>
+                </div>
+                <div class="booking-time">
+                  <strong>Available:</strong> All day Thursday
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Weekly Booking Form -->
+          <div id="weeklyBookingForm" class="weekly-booking-container hidden">
+            <div class="booking-header">
+              <h3>Weekly Token Booking</h3>
+              <div class="week-info">
+                <span class="week-label">Booking for:</span>
+                <span class="week-dates" id="weekDates"
+                  >September 15 - September 21, 2025</span
+                >
+              </div>
+            </div>
+
+            <div class="weekly-grid" id="weeklyGrid">
+              <!-- Weekly calendar will be generated here -->
+            </div>
+
+            <div class="booking-summary">
+              <div class="summary-card">
+                <div class="summary-header">
+                  <h4>Booking Summary</h4>
+                </div>
+                <div class="summary-content">
+                  <div class="summary-item">
+                    <span class="summary-label">Total Meals Selected:</span>
+                    <span class="summary-value" id="totalMealsCount">0</span>
+                  </div>
+                  <div class="meal-breakdown" id="mealBreakdown">
+                    <!-- Meal breakdown will be shown here -->
+                  </div>
+                </div>
+                <button class="confirm-booking-btn" id="confirmBookingBtn">
+                  <i class="fas fa-check-circle"></i>
+                  Confirm Weekly Booking
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Profile Tab -->
+        <div id="profileTab" class="tab-content">
+          <div class="profile-container">
+            <div class="profile-card">
+              <div class="profile-header">
+                <h3>Student Profile</h3>
+              </div>
+              <div class="profile-content">
+                <div class="student-info">
+                  <div class="student-avatar-large">
+                    <i class="fas fa-user-circle"></i>
+                  </div>
+                  <div class="student-details">
+                    <h4 id="profileName">Student Name</h4>
+                    <p id="profileRoll">Roll Number</p>
+                    <p id="profileBlock">Hostel Block & Room</p>
+                    <p id="profileDepartment">Department</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="qr-card">
+              <div class="qr-header">
+                <h3>Permanent QR Code</h3>
+                <p>Use this QR code at all mess counters</p>
+              </div>
+              <div class="qr-content">
+                <div class="qr-code-display" id="qrCodeDisplay">
+                  <!-- QR code will be generated here -->
+                </div>
+                <div class="qr-id">
+                  <span>ID: </span>
+                  <span id="qrCodeId">HST-XXXXXX</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Menu Tab -->
+        <div id="menuTab" class="tab-content">
+          <div class="menu-container">
+            <div class="menu-header">
+              <h3>Weekly Mess Menu</h3>
+              <p>Complete meal schedule with timings</p>
+            </div>
+
+            <div class="menu-grid" id="menuGrid">
+              <!-- Menu will be generated here -->
+            </div>
+          </div>
+        </div>
+
+        <!-- History Tab -->
+        <div id="historyTab" class="tab-content">
+          <div class="history-container">
+            <div class="history-header">
+              <h3>Booking History</h3>
+              <p>Your past and current bookings</p>
+            </div>
+
+            <div class="history-content">
+              <div class="history-card">
+                <h4>Current Week Status</h4>
+                <div id="currentWeekStatus">
+                  <p>No active bookings found.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- Toast Messages -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
