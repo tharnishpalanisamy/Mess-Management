@@ -33,12 +33,12 @@ const SYSTEM_DATA = {
             },
             lunch: {
                 timing: "12:00-2:15 PM", 
-                items: "Non-veg: Rice, Chicken Gravy, Kuska | Veg: Mushroom Gravy, Cauliflower 65",
+                items: "Non-veg: Rice, Chicken Gravy, Kuska | Veg: Mushroom Gravy, Cauliflower 65,Juices (lemon/nanari sarbath)",
                 hasOptions: true
             },
             snack: {
                 timing: "4:00-6:30 PM",
-                items: "Juices (lemon/nanari sarbath), Tea, Coffee, Milk + Onion Pakoda/French fries"
+                items: " Tea, Coffee, Milk + Onion Pakoda/French fries"
             },
             dinner: {
                 timing: "7:00-8:30 PM",
