@@ -422,7 +422,7 @@ function generateWeeklyBookingForm() {
             <div class="day-card ${isSpecialDay ? 'special-day' : ''}">
                 <div class="day-header">
                     ${dayNames[index]}
-                    <div class="day-date">${dateStr}</div>
+                    <div class="day-date" style="font-weight: bold; color: white;">${dateStr}</div>
                 </div>
                 <div class="meal-list">
                     ${generateMealItems(day, dayData)}
@@ -817,4 +817,5 @@ function showToast(message, type = 'info') {
         if (toast.parentNode) {
             toast.parentNode.removeChild(toast);
         }
-    }, 5000);}
+    }, 5000);
+}
