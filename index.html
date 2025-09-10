@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hostel Mess Token System - PSG CAS</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+  </head>
+  <body>
+    <!-- Login Screen -->
+    <div id="loginScreen" class="login-container active">
+      <div class="login-card">
+        <div class="login-header">
+          <i class="fas fa-qrcode"></i>
+          <h1>Hostel Mess Token System</h1>
+          <p>PSG College of Arts & Science</p>
+          <div class="current-date-display">
+            <span id="loginCurrentDate">Wednesday, September 10, 2025</span>
+          </div>
+        </div>
+
+        <form id="loginForm" class="login-form">
+          <div class="form-group">
+            <label for="rollNumber">Roll Number</label>
+            <input
+              type="text"
+              id="rollNumber"
+              name="rollNumber"
+              placeholder="Enter your roll number"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              placeholder="Enter your password"
+              required
+            />
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-block">
+            <i class="fas fa-sign-in-alt"></i>
+            Access Token System
+          </button>
+
+          <div class="demo-info">
+            <h4>Demo Login:</h4>
+            <p>
+              <strong>Roll:</strong> 21CS101
+              <strong>Password:</strong> student123
+            </p>
+            <p>
+              <strong>Roll:</strong> 21CS102
+              <strong>Password:</strong> student456
+            </p>
+          </div>
+        </form>
+
+        <div id="loginError" class="error-message hidden"></div>
+      </div>
+    </div>
+
+    <!-- Main Dashboard -->
+    <div id="mainDashboard" class="dashboard hidden">
+      <!-- Header -->
+      <header class="dashboard-header">
+        <div class="header-content">
+          <div class="header-left">
+            <h2>Mess Token System</h2>
+            <p id="studentWelcome">Welcome back!</p>
+          </div>
+          <div class="header-right">
+            <div class="date-calendar">
+              <div class="calendar-icon">
+                <i class="fas fa-calendar-day"></i>
+              </div>
+              <div class="date-info">
+                <div class="current-date" id="currentDate">Wed, Sep 10</div>
+                <div class="current-year">2025</div>
+              </div>
+            </div>
+            <button id="logoutBtn" class="logout-btn">
+              <i class="fas fa-sign-out-alt"></i>
+              Logout
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <!-- Navigation -->
+      <nav class="main-nav">
+        <ul>
+          <li>
+            <a href="#" data-section="tokens" class="nav-link active">
+              <i class="fas fa-ticket-alt"></i> Today's Tokens
+            </a>
+          </li>
+          <li>
+            <a href="#" data-section="profile" class="nav-link">
+              <i class="fas fa-qrcode"></i> My QR Code
+            </a>
+          </li>
+          <li>
+            <a href="#" data-section="menu" class="nav-link">
+              <i class="fas fa-utensils"></i> Menu
+            </a>
+          </li>
+          <li>
+            <a href="#" data-section="history" class="nav-link">
+              <i class="fas fa-history"></i> Usage History
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+      <!-- Content Sections -->
+      <main class="main-content">
+        <!-- Token Selection Section -->
+        <section id="tokensSection" class="content-section active">
+          <div class="section-header">
+            <h3>Select Today's Tokens</h3>
+            <div class="date-display">
+              <i class="fas fa-calendar"></i>
+              <span id="todayDate">Wednesday, September 10, 2025</span>
+            </div>
+          </div>
+
+          <div class="token-selection-container">
+            <!-- Always Available Tokens -->
+            <div class="token-category">
+              <h4>Available Today</h4>
+
+              <!-- Snacks Token -->
+              <div class="token-card">
+                <div class="token-header">
+                  <div class="token-emoji">🍿</div>
+                  <div class="token-info">
+                    <h5>Evening Snacks</h5>
+                    <p>Available daily • 4:00 PM - 6:00 PM</p>
+                  </div>
+                </div>
+                <div class="token-actions">
+                  <label class="token-toggle">
+                    <input
+                      type="checkbox"
+                      id="snacksToken"
+                      onchange="toggleToken('snacks')"
+                    />
+                    <span class="slider"></span>
+                  </label>
+                  <div class="token-status" id="snacksStatus">Not Selected</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Special Day Tokens -->
+            <div class="token-category" id="specialTokens">
+              <h4 id="specialDayTitle">Special Day Options</h4>
+
+              <!-- Ice Cream Token (Tuesday only) -->
+              <div class="token-card" id="iceCreamCard">
+                <div class="token-header">
+                  <div class="token-emoji">🍦</div>
+                  <div class="token-info">
+                    <h5>Ice Cream</h5>
+                    <p>Tuesday only • 8:00 PM - 9:00 PM</p>
+                  </div>
+                </div>
+                <div class="token-actions">
+                  <label class="token-toggle">
+                    <input
+                      type="checkbox"
+                      id="iceCreamToken"
+                      onchange="toggleToken('iceCream')"
+                    />
+                    <span class="slider"></span>
+                  </label>
+                  <div class="token-status" id="iceCreamStatus">
+                    Not Available
+                  </div>
+                </div>
+              </div>
+
+              <!-- Dinner Options (Tuesday & Thursday) -->
+              <div class="dinner-tokens" id="dinnerTokens">
+                <h5>Dinner Selection (Choose One)</h5>
+                <div class="dinner-options">
+                  <div class="dinner-option" onclick="selectDinner('veg')">
+                    <div class="option-header">
+                      <div class="option-emoji">🥬</div>
+                      <div class="option-info">
+                        <h6>Vegetarian</h6>
+                        <p id="vegMenuToday">Veg dinner option</p>
+                      </div>
+                    </div>
+                    <div class="option-radio">
+                      <input
+                        type="radio"
+                        id="vegDinner"
+                        name="dinnerChoice"
+                        value="veg"
+                      />
+                    </div>
+                  </div>
+
+                  <div class="dinner-option" onclick="selectDinner('nonveg')">
+                    <div class="option-header">
+                      <div class="option-emoji">🍗</div>
+                      <div class="option-info">
+                        <h6>Non-Vegetarian</h6>
+                        <p id="nonVegMenuToday">Non-veg dinner option</p>
+                      </div>
+                    </div>
+                    <div class="option-radio">
+                      <input
+                        type="radio"
+                        id="nonVegDinner"
+                        name="dinnerChoice"
+                        value="nonveg"
+                      />
+                    </div>
+                  </div>
+
+                  <div class="dinner-option" onclick="selectDinner('none')">
+                    <div class="option-header">
+                      <div class="option-emoji">❌</div>
+                      <div class="option-info">
+                        <h6>No Dinner</h6>
+                        <p>Skip dinner today</p>
+                      </div>
+                    </div>
+                    <div class="option-radio">
+                      <input
+                        type="radio"
+                        id="noDinner"
+                        name="dinnerChoice"
+                        value="none"
+                        checked
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Save Button -->
+            <div class="save-tokens">
+              <button class="btn btn-primary btn-large" onclick="saveTokens()">
+                <i class="fas fa-save"></i>
+                Save Today's Tokens
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- QR Code Profile Section -->
+        <section id="profileSection" class="content-section">
+          <div class="section-header">
+            <h3>My Hostel ID QR Code</h3>
+            <p>Use this QR code at all mess counters</p>
+          </div>
+
+          <div class="qr-profile-container">
+            <div class="student-info-card">
+              <div class="student-avatar">
+                <i class="fas fa-user-circle"></i>
+              </div>
+              <div class="student-details">
+                <h4 id="profileName">Student Name</h4>
+                <p id="profileRoll">Roll Number</p>
+                <p id="profileBlock">Hostel Block & Room</p>
+              </div>
+            </div>
+
+            <div class="qr-code-card">
+              <div class="qr-header">
+                <h4>Permanent Hostel ID</h4>
+                <p>Valid throughout your degree</p>
+              </div>
+              <div class="qr-code-display" id="permanentQRCode">
+                <!-- QR Code will be generated here -->
+              </div>
+              <div class="qr-id">
+                <p>ID: <span id="qrCodeId">HST-XXXXXX</span></p>
+              </div>
+            </div>
+
+            <div class="counter-info">
+              <h4>Mess Counters</h4>
+              <div class="counter-list">
+                <div class="counter-item">
+                  <div class="counter-icon">🍿</div>
+                  <div class="counter-details">
+                    <h5>Snack Counter</h5>
+                    <p>4:00 PM - 6:00 PM</p>
+                  </div>
+                </div>
+                <div class="counter-item">
+                  <div class="counter-icon">🥬</div>
+                  <div class="counter-details">
+                    <h5>Veg Counter</h5>
+                    <p>7:00 PM - 9:00 PM</p>
+                  </div>
+                </div>
+                <div class="counter-item">
+                  <div class="counter-icon">🍗</div>
+                  <div class="counter-details">
+                    <h5>Non-Veg Counter</h5>
+                    <p>7:00 PM - 9:00 PM</p>
+                  </div>
+                </div>
+                <div class="counter-item">
+                  <div class="counter-icon">🍦</div>
+                  <div class="counter-details">
+                    <h5>Ice Cream Counter</h5>
+                    <p>8:00 PM - 9:00 PM (Tuesday)</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Menu Section -->
+        <section id="menuSection" class="content-section">
+          <div class="section-header">
+            <h3>Mess Menu</h3>
+            <p>Daily meal options and timings</p>
+          </div>
+
+          <div class="menu-container">
+            <div class="menu-card">
+              <div class="menu-header">
+                <h4>Daily Options</h4>
+              </div>
+              <div class="menu-items">
+                <div class="menu-item">
+                  <div class="item-icon">🍿</div>
+                  <div class="item-info">
+                    <h5>Evening Snacks</h5>
+                    <p>4:00 PM - 6:00 PM • Available daily</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="menu-card special-menu">
+              <div class="menu-header">
+                <h4>Tuesday Special</h4>
+              </div>
+              <div class="menu-items">
+                <div class="menu-item">
+                  <div class="item-icon">🥬</div>
+                  <div class="item-info">
+                    <h5>Vegetarian Dinner</h5>
+                    <p>
+                      Cauliflower Chilli + Mushroom Biryani with Mushroom Gravy
+                    </p>
+                  </div>
+                </div>
+                <div class="menu-item">
+                  <div class="item-icon">🍗</div>
+                  <div class="item-info">
+                    <h5>Non-Vegetarian Dinner</h5>
+                    <p>
+                      Chicken Gravy + Chicken/Mutton Biryani (alternating weeks)
+                    </p>
+                  </div>
+                </div>
+                <div class="menu-item">
+                  <div class="item-icon">🍦</div>
+                  <div class="item-info">
+                    <h5>Ice Cream</h5>
+                    <p>8:00 PM - 9:00 PM • Tuesday only</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="menu-card special-menu">
+              <div class="menu-header">
+                <h4>Thursday Special</h4>
+              </div>
+              <div class="menu-items">
+                <div class="menu-item">
+                  <div class="item-icon">🥬</div>
+                  <div class="item-info">
+                    <h5>Vegetarian Dinner</h5>
+                    <p>Chapati with Cauliflower and Mushroom Gravy</p>
+                  </div>
+                </div>
+                <div class="menu-item">
+                  <div class="item-icon">🍗</div>
+                  <div class="item-info">
+                    <h5>Non-Vegetarian Dinner</h5>
+                    <p>Chapati with Chicken Gravy</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Usage History Section -->
+        <section id="historySection" class="content-section">
+          <div class="section-header">
+            <h3>Token Usage History</h3>
+            <p>Track your daily token usage</p>
+          </div>
+
+          <div class="history-container">
+            <div class="today-usage">
+              <h4>Today's Status</h4>
+              <div class="usage-grid" id="todayUsage">
+                <!-- Usage status will be populated here -->
+              </div>
+            </div>
+
+            <div class="usage-stats">
+              <h4>Quick Stats</h4>
+              <div class="stats-grid">
+                <div class="stat-item">
+                  <div class="stat-icon">🍿</div>
+                  <div class="stat-info">
+                    <h5>Snacks Used</h5>
+                    <p id="snacksUsedCount">0 today</p>
+                  </div>
+                </div>
+                <div class="stat-item">
+                  <div class="stat-icon">🍽️</div>
+                  <div class="stat-info">
+                    <h5>Dinners Used</h5>
+                    <p id="dinnersUsedCount">0 today</p>
+                  </div>
+                </div>
+                <div class="stat-item">
+                  <div class="stat-icon">🍦</div>
+                  <div class="stat-info">
+                    <h5>Ice Cream Used</h5>
+                    <p id="iceCreamUsedCount">0 today</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <!-- Success/Error Messages -->
+    <div id="messageContainer" class="message-container"></div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
